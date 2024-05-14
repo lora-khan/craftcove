@@ -40,7 +40,7 @@ CREATE TABLE tag_product
     UNIQUE KEY (tag_id, product_id) -- Ensure uniqueness of tag-product pairs
 );
 
-CREATE TABLE user
+CREATE TABLE user_ac
 (
     id          INT AUTO_INCREMENT PRIMARY KEY,
     name        VARCHAR(255) NOT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE cart
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status      ENUM('pending', 'process', 'complete') DEFAULT 'pending',
     coupon_used BOOLEAN DEFAULT False,
-    FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES user_ac (id) ON DELETE CASCADE
 );
 
 
@@ -78,7 +78,7 @@ CREATE TABLE review
     comment     TEXT,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES user_ac (id) ON DELETE CASCADE
 );
 
 
@@ -97,6 +97,6 @@ CREATE TABLE applied_coupon
     user_id   INT NOT NULL,
     coupon_id INT NOT NULL,
     applied   BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (user_id) REFERENCES user (id),
+    FOREIGN KEY (user_id) REFERENCES user_ac (id),
     FOREIGN KEY (coupon_id) REFERENCES coupon_code (id)
 );
