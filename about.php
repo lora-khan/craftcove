@@ -3,7 +3,6 @@
 
 <section class="py-2">
     <style>
-        /* Custom CSS */
         .testimonial-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -82,8 +81,6 @@
         .social-icons a:hover {
             color: #f2716c;
         }
-
-        /* End Custom CSS */
     </style>
     <div class="max-w-5xl mx-auto px-4">
         <h1 class="text-3xl font-bold tracking-wide mb-2 text-center uppercase text-slate-800">Discover the Artistry of Craftcove</h1>

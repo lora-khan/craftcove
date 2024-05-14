@@ -4,27 +4,23 @@ require "database.php";
 
 global $conn;
 admin_authentication();
-// Check if category ID is provided and valid
 $category_id = isset($_GET['id']) ? $_GET['id'] : null;
 if (!$category_id || !is_numeric($category_id)) {
     echo "<script>window.location.href='admin_category.php';</script>";
-    exit; // Exit to prevent further execution
+    exit;
 }
 
-// Fetch the category data
 $sql = "SELECT * FROM category WHERE id = $category_id";
 $result = $conn->query($sql);
 if ($result->num_rows == 0) {
     echo "<script>window.location.href='admin_category.php';</script>";
-    exit; // Exit if category not found
+    exit;
 }
 $row = $result->fetch_assoc();
 
-// Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = isset($_POST['name']) ? $_POST['name'] : '';
     if ($name) {
-        // Update query
         $sql = "UPDATE category SET name='$name' WHERE id=$category_id";
         if ($conn->query($sql) === TRUE) {
             $_SESSION['category_update_msg']= "Category updated successfully";

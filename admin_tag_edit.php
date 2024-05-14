@@ -2,27 +2,25 @@
 <?php require "database.php" ?>
 <?php loadPartial('admin_header'); ?>
 <?php
-// Check if category ID is provided and valid
 global $conn;
 admin_authentication();
 $tag_id = isset($_GET['id']) ? $_GET['id'] : null;
 if (!$tag_id || !is_numeric($tag_id)) {
     echo "<script>window.location.href='admin_tag.php';</script>";
-    exit; // Exit to prevent further execution
+    exit;
 }
 
 $sql = "SELECT * FROM tag WHERE id = $tag_id";
 $result = $conn->query($sql);
 if ($result->num_rows == 0) {
     echo "<script>window.location.href='admin_tag.php';</script>";
-    exit; // Exit if category not found
+    exit;
 }
 $row = $result->fetch_assoc();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = isset($_POST['name']) ? $_POST['name'] : '';
     if ($name) {
-        // Update query
         $sql = "UPDATE tag SET name='$name' WHERE id=$tag_id";
         if ($conn->query($sql) === TRUE) {
             $_SESSION['tag_update_msg']= "Tag updated successfully!";

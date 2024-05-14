@@ -3,13 +3,10 @@ require 'helpers.php';
 require 'database.php';
 global $conn;
 
-// Redirect to login page if the user is not logged in
 if (!is_user_logged_in()) {
     echo "<script>window.location.href='login_view.php';</script>";
     exit();
 }
-
-// Handle logout request
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['logout_btn'])) {
     session_unset();
     session_destroy();
@@ -19,22 +16,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['logout_btn'])) {
     exit();
 }
 
-// Fetch user ID
+
 $user_id = $_SESSION['user']['id'];
 
-// Fetch user profile information
 $profile_sql = "SELECT * FROM user_ac WHERE id = '$user_id'";
 $profile_result = mysqli_query($conn, $profile_sql);
 $row = mysqli_fetch_assoc($profile_result);
 
-// Fetch cart information
 $sql = "SELECT id, total_price, created_at, status FROM cart WHERE user_id = '$user_id' ORDER BY created_at DESC LIMIT 1";
 $result = mysqli_query($conn, $sql);
 
-// Initialize cancel order message variable
 $cancel_order_message = '';
 
-// Handle cancel order request
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cancel_btn'])) {
     $order_id = $_POST['order_id'];
     $sql_delete = "DELETE FROM cart WHERE id = $order_id AND user_id = $user_id AND status = 'pending'";
@@ -82,7 +75,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['cancel_btn'])) {
     }
 }
 
-// Load header partial
 loadPartial('header');
 ?>
 
@@ -99,7 +91,6 @@ loadPartial('header');
     <?php unset($_SESSION['register_msg']) ?>
 <?php endif; ?>
 
-<!-- Profile Section -->
 <div class="bg-gray-100 py-20">
     <div class="max-w-4xl mx-auto px-4">
         <h1 class="text-4xl font-bold text-center mb-12 text-slate-700 underline underline-offset-8 uppercase tracking-wide">
@@ -107,9 +98,9 @@ loadPartial('header');
         <div class="bg-white rounded-lg shadow-lg overflow-hidden">
             <div class="p-6">
                 <div class="flex  justify-around items-center ">
-                    <!-- User Profile Information -->
+
                     <div class="flex items-center justify-center py-6">
-                        <!-- Display user profile picture -->
+
                         <div class="w-64 h-64 rounded-full overflow-hidden bg-gray-300 flex items-center justify-center">
                             <?php if ($row['profile_img']): ?>
                                 <img src="<?= $row['profile_img'] ?>" alt="user profile picture">
@@ -124,7 +115,6 @@ loadPartial('header');
                             <?php endif; ?>
                         </div>
                     </div>
-                    <!-- Personal Information -->
                     <div class="">
                         <div class="shadow">
                             <h2 class="text-2xl font-bold mb-4 uppercase text-slate-700 ">Personal
@@ -148,11 +138,9 @@ loadPartial('header');
                                 </li>
                             </ul>
                         </div>
-                        <!-- Add additional content here if needed -->
                     </div>
                 </div>
                 <div class="pt-1 bg-slate-200 mt-4"></div>
-                <!-- Logout Button -->
                 <div class="mt-8">
                     <form action="profile.php" method='POST'>
                         <div class="flex justify-center">
@@ -165,7 +153,6 @@ loadPartial('header');
                         </div>
                     </form>
                 </div>
-                <!-- Order History -->
                 <?php if (mysqli_num_rows($result) > 0): ?>
                     <div class="mt-12">
                         <h2 class="text-2xl font-bold mb-5 text-center text-slate-600 underline underline-offset-8 uppercase">
@@ -181,7 +168,6 @@ loadPartial('header');
                                         $<?= $row['total_price'] ?></p>
                                     <p class="text-gray-600 text-sm"><span class="font-bold uppercase">Status:</span>
                                         <?= $row['status'] ?></p>
-                                    <!-- Display cancel order button for pending orders -->
                                     <?php if ($row['status'] === 'pending'): ?>
                                         <form action="profile.php" method="POST">
                                             <input type="hidden" name="order_id" value="<?= $row['id'] ?>">
@@ -194,12 +180,10 @@ loadPartial('header');
                                 </div>
                             <?php endwhile; ?>
                             <?php
-                            // Fetch total order price and count
                             $total_order_sql = "SELECT COUNT(*) AS total_order_count, SUM(total_price) AS total_order_price FROM cart WHERE user_id = '$user_id'";
                             $total_order_result = mysqli_query($conn, $total_order_sql);
                             $total_order_row = mysqli_fetch_assoc($total_order_result);
                             ?>
-                            <!-- Display total order information -->
                             <div class="bg-gray-200 p-4 rounded-lg w-[45%] flex flex-col justify-center space-y-2">
                                 <p class="text-gray-600 text-sm"><span class="font-bold uppercase">I Total Spent:</span>
                                     $<?= $total_order_row['total_order_price'] ?></p>
@@ -224,6 +208,5 @@ loadPartial('header');
     });
 </script>
 <?php
-// Load footer partial
 loadPartial('footer');
 ?>

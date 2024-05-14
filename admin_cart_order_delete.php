@@ -4,26 +4,25 @@ require "database.php";
 
 global $conn;
 admin_authentication();
-// Check if tag-product ID is provided and valid
+
 $id = isset($_GET['id']) ? $_GET['id'] : null;
+
 if (!$id || !is_numeric($id)) {
     echo "<script>window.location.href='admin_cart_order.php';</script>";
-    exit; // Exit to prevent further execution
+    exit;
 }
 
-// Fetch the tag-product data
 $sql = "SELECT c.id as order_id, p.name as product_name, c.status FROM cart c JOIN product p ON c.product_id=p.id WHERE c.id=$id";
 $result = $conn->query($sql);
 if ($result->num_rows == 0) {
     echo "<script>alert('Order-Cart not found');</script>";
     echo "<script>window.location.href='admin_cart_order.php';</script>";
-    exit; // Exit if tag-product not found
+    exit;
 }
 $row = $result->fetch_assoc();
 
 if (isset($_POST['confirm'])) {
     try {
-        // Delete the tag-product
         $sql_delete = "DELETE FROM cart WHERE id = $id";
         if ($conn->query($sql_delete) === TRUE) {
             unset($_SESSION['price']);
@@ -37,7 +36,6 @@ if (isset($_POST['confirm'])) {
             echo "<script>alert('Error deleting Order-Cart: " . $conn->error . "');</script>";
         }
     } catch (mysqli_sql_exception $e) {
-        // Check if the error message contains information about foreign key constraint
         if (strpos($e->getMessage(), 'foreign key constraint')) {
             echo "<script>alert('Error deleting Order-Cart: Cannot delete or update a parent row due to a foreign key constraint');</script>";
         } else {

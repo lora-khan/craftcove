@@ -4,23 +4,20 @@ require "database.php";
 
 global $conn;
 admin_authentication();
-// Check if product ID is provided and valid
 $id = isset($_GET['id']) ? $_GET['id'] : null;
 if (!$id || !is_numeric($id)) {
     echo "<script>window.location.href='admin_product.php';</script>";
-    exit; // Exit to prevent further execution
+    exit;
 }
 
-// Fetch the product data
 $sql = "SELECT * FROM product WHERE id = '$id'";
 $result = $conn->query($sql);
 if ($result->num_rows == 0) {
     echo "<script>window.location.href='admin_product.php';</script>";
-    exit; // Exit if product not found
+    exit;
 }
 $row = $result->fetch_assoc();
 
-// Fetch categories from the database
 $categoryQuery = "SELECT * FROM category";
 $categoryResult = $conn->query($categoryQuery);
 $categories = [];
@@ -30,7 +27,6 @@ if ($categoryResult->num_rows > 0) {
     }
 }
 
-// Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = isset($_POST['name']) ? $_POST['name'] : '';
     $description = isset($_POST['description']) ? $_POST['description'] : '';
@@ -40,33 +36,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $img_url = isset($_POST['img_url']) ? $_POST['img_url'] : '';
     $category_id = isset($_POST['category']) ? $_POST['category'] : '';
 
-    // Check for negative values
     if ($price < 0 || $stock < 0 || $total_sold < 0) {
         $_SESSION['negative_quantity_error'] = "Negative values are not allowed for price, stock, or total sold";
     } else {
-        // Update query
         $sql = "UPDATE product SET name='$name', description='$description', price='$price', stock='$stock', total_sold='$total_sold', category_id='$category_id'";
 
-        // Handle image upload
         if ($_FILES['img_url']['name']) {
             $image_name = $_FILES['img_url']['name'];
 
-            // Create "image" folder if it doesn't exist
             if (!file_exists('image')) {
                 mkdir('image');
             }
 
-            // Move uploaded image to the "image" folder
             $image_path = 'image/' . $image_name;
             move_uploaded_file($_FILES['img_url']['tmp_name'], $image_path);
 
-            // Update the SQL query with the image name
             $sql .= ", img_url='$image_path'";
         }
 
         $sql .= " WHERE id='$id'";
 
-        // Execute the update query
         if ($conn->query($sql) === TRUE) {
             $_SESSION['product_update_msg'] = "Product updated successfully!";
             echo "<script>window.location.href='admin_product.php';</script>";

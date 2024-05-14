@@ -4,24 +4,19 @@ require "database.php";
 
 global $conn;
 admin_authentication();
-// Fetch the tag data
 $sql_tag = "SELECT * FROM tag";
 $result_tag = $conn->query($sql_tag);
 
-// Fetch the product data
 $sql_product = "SELECT * FROM product";
 $result_product = $conn->query($sql_product);
 
-// Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $tag_id = isset($_POST['tag_id']) ? $_POST['tag_id'] : '';
     $product_id = isset($_POST['product_id']) ? $_POST['product_id'] : '';
     if ($tag_id && $product_id) {
-        // Check if the combination already exists
         $check_sql = "SELECT * FROM tag_product WHERE tag_id='$tag_id' AND product_id='$product_id'";
         $check_result = $conn->query($check_sql);
         if ($check_result->num_rows == 0) {
-            // Insert query
             $sql = "INSERT INTO tag_product (tag_id, product_id) VALUES ('$tag_id', '$product_id')";
             if ($conn->query($sql) === TRUE) {
                 echo "<script>alert('Tag-Product added successfully');</script>";

@@ -4,29 +4,25 @@ require "database.php";
 
 global $conn;
 admin_authentication();
-// Check if order ID is provided and valid
 $id = isset($_GET['id']) ? $_GET['id'] : null;
 if (!$id || !is_numeric($id)) {
     echo "<script>window.location.href='admin_cart_order.php';</script>";
-    exit; // Exit to prevent further execution
+    exit;
 }
 
-// Fetch the order data
 $sql = "SELECT c.id as order_id, p.name as product_name, c.status FROM cart c JOIN product p ON c.product_id=p.id WHERE c.id=$id";
 
 $result = $conn->query($sql);
 if ($result->num_rows == 0) {
     echo "<script>window.location.href='admin_cart_order.php';</script>";
-    exit; // Exit if order not found
+    exit;
 }
 
 $row = $result->fetch_assoc();
 
-// Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $status = isset($_POST['status']) ? $_POST['status'] : '';
     if ($status) {
-        // Update query
         $sql = "UPDATE cart SET status='$status' WHERE id=$id";
         if ($conn->query($sql) === TRUE) {
             $_SESSION['order_cart_update_msg']= "Order updated successfully";

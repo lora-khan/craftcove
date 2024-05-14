@@ -15,13 +15,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['loginBtn'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // Perform login authentication here
     $sql = "SELECT * FROM user_ac WHERE email = ? AND password = ?";
     $stmt = $conn->prepare($sql);
     mysqli_stmt_bind_param($stmt, "ss", $email, $password);
     mysqli_stmt_execute($stmt);
 
-    //result
     $result = mysqli_stmt_get_result($stmt);
     $user = mysqli_fetch_assoc($result);
     if ($user) {

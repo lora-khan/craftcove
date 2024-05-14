@@ -3,7 +3,6 @@ require "helpers.php";
 require "database.php";
 global $conn;
 
-// Query to fetch top 6 products
 $sql = "SELECT * FROM product order by created_at desc LIMIT 6";
 $result = mysqli_query($conn, $sql);
 
@@ -18,7 +17,6 @@ loadPartial('header');
     <h2 class="text-2xl font-semibold text-center text-orange-500 underline underline-offset-8 mb-5">NEW ADDED</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-            <!-- Product Card -->
             <div class="bg-white rounded-lg shadow-2xl flex flex-col justify-between">
                 <?php if ($row['img_url']) : ?>
                     <div>

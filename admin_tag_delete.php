@@ -4,26 +4,23 @@ require "database.php";
 
 global $conn;
 admin_authentication();
-// Check if category ID is provided and valid
 $tag_id = isset($_GET['id']) ? $_GET['id'] : null;
 if (!$tag_id || !is_numeric($tag_id)) {
     echo "<script>window.location.href='admin_tag.php';</script>";
-    exit; // Exit to prevent further execution
+    exit;
 }
 
-// Fetch the category data
 $sql = "SELECT * FROM tag WHERE id = $tag_id";
 $result = $conn->query($sql);
 if ($result->num_rows == 0) {
     echo "<script>alert('Tag not found');</script>";
     echo "<script>window.location.href='admin_tag.php';</script>";
-    exit; // Exit if category not found
+    exit;
 }
 $row = $result->fetch_assoc();
 
 if (isset($_POST['confirm'])) {
     try {
-        // Delete the category
         $sql_delete = "DELETE FROM tag WHERE id = $tag_id";
         if ($conn->query($sql_delete) === TRUE) {
             $_SESSION['tag_delete_msg'] = "Tag Delete successful!";
@@ -33,7 +30,6 @@ if (isset($_POST['confirm'])) {
             echo "<script>alert('Error deleting Tag: " . $conn->error . "');</script>";
         }
     } catch (mysqli_sql_exception $e) {
-        // Check if the error message contains information about foreign key constraint
         if (strpos($e->getMessage(), 'foreign key constraint')) {
             echo "<script>alert('Error deleting Tag: Cannot delete or update a parent row due to a foreign key constraint');</script>";
         } else {

@@ -3,32 +3,26 @@ require "helpers.php";
 require "database.php";
 global $conn;
 
-// Pagination logic
 $productsPerPage = 6;
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
 $offset = ($page - 1) * $productsPerPage;
 
-// Search logic
 $searchQuery = isset($_GET['search']) ? $_GET['search'] : '';
 
-// Filter logic
 $filterCategory = isset($_GET['category']) ? $_GET['category'] : '';
 $filterPriceRange = isset($_GET['priceRange']) ? $_GET['priceRange'] : '';
 
 $sql = "SELECT p.*, c.name AS category_name FROM product p JOIN category c ON p.category_id=c.id";
 $whereClause = [];
 
-// Search query
 if (!empty($searchQuery)) {
     $whereClause[] = "p.name LIKE '%" . mysqli_real_escape_string($conn, $searchQuery) . "%'";
 }
 
-// Filter by category
 if (!empty($filterCategory)) {
     $whereClause[] = "c.name = '" . mysqli_real_escape_string($conn, $filterCategory) . "'";
 }
 
-// Filter by price range
 if (!empty($filterPriceRange)) {
     $priceRange = explode('-', $filterPriceRange);
     if (count($priceRange) == 2) {
@@ -38,7 +32,6 @@ if (!empty($filterPriceRange)) {
     }
 }
 
-// Construct WHERE clause
 if (!empty($whereClause)) {
     $sql .= " WHERE " . implode(' AND ', $whereClause);
 }
@@ -86,34 +79,34 @@ loadPartial('header');
                 Filter
             </h2>
             <form id="filterForm" action="" method="GET">
-                <!-- Filter by Price Range -->
+
                 <div class="mb-6">
                     <label for="priceRange" class="block mb-2 text-sm font-medium text-gray-600">Select
                         a price range</label>
                     <select id="priceRange" name="priceRange"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 focus:outline-none block w-full p-2.5">
-                            <option value="" <?php echo $filterPriceRange === '' ? 'selected' : ''; ?>>Any price range
-                            </option>
-                            <option value="0-10" <?php echo $filterPriceRange === '0-10' ? 'selected' : ''; ?>>$0 -
-                                $10
-                            </option>
-                            <option value="10-20" <?php echo $filterPriceRange === '10-20' ? 'selected' : ''; ?>>$10 -
-                                $20
-                            </option>
-                            <option value="20-30" <?php echo $filterPriceRange === '20-30' ? 'selected' : ''; ?>>$20 -
-                                $30
-                            </option>
-                            <option value="30-40" <?php echo $filterPriceRange === '30-40' ? 'selected' : ''; ?>>$30 -
-                                $40
-                            </option>
-                            <option value="40-100000" <?php echo $filterPriceRange === '40-100000' ? 'selected' : ''; ?>
-                            <span>&gt; $40</span></option>
-                            <!-- Add more options as needed -->
-                        </select>
+                        <option value="" <?php echo $filterPriceRange === '' ? 'selected' : ''; ?>>Any price range
+                        </option>
+                        <option value="0-10" <?php echo $filterPriceRange === '0-10' ? 'selected' : ''; ?>>$0 -
+                            $10
+                        </option>
+                        <option value="10-20" <?php echo $filterPriceRange === '10-20' ? 'selected' : ''; ?>>$10 -
+                            $20
+                        </option>
+                        <option value="20-30" <?php echo $filterPriceRange === '20-30' ? 'selected' : ''; ?>>$20 -
+                            $30
+                        </option>
+                        <option value="30-40" <?php echo $filterPriceRange === '30-40' ? 'selected' : ''; ?>>$30 -
+                            $40
+                        </option>
+                        <option value="40-100000" <?php echo $filterPriceRange === '40-100000' ? 'selected' : ''; ?>
+                        <span>&gt; $40</span></option>
 
-                    </div>
+                    </select>
 
-                <!-- Filter by Category -->
+                </div>
+
+
                 <div class="mb-6">
                     <label for="category" class="block mb-2 text-sm font-medium text-gray-600">Select
                         a category</label>
@@ -129,7 +122,7 @@ loadPartial('header');
                         <?php endwhile; ?>
                     </select>
                 </div>
-                <!-- Submit Button -->
+
                 <button id="filter_btn" type="submit"
                         class="block w-full bg-orange-400 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring focus:ring-blue-200 focus:ring-opacity-50 uppercase text-sm tracking-wider">
                     Apply Filter
@@ -137,7 +130,7 @@ loadPartial('header');
             </form>
         </div>
         <div class="w-full md:w-3/4">
-            <!-- Product Display -->
+
             <?php if (mysqli_num_rows($result) > 0) : ?>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3">
                     <?php while ($row = mysqli_fetch_assoc($result)) : ?>
@@ -187,7 +180,7 @@ loadPartial('header');
                         </div>
                     <?php endwhile; ?>
                 </div>
-                <!-- Pagination Links -->
+
                 <?php if (($totalPages > 1 && $productsPerPage > 5) && (empty($searchQuery) && empty($filterCategory) && empty($filterPriceRange))) : ?>
                     <div class="flex justify-center mt-8" id="pagination">
                         <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"

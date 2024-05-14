@@ -4,26 +4,23 @@ require "database.php";
 
 global $conn;
 admin_authentication();
-// Check if category ID is provided and valid
 $category_id = isset($_GET['id']) ? $_GET['id'] : null;
 if (!$category_id || !is_numeric($category_id)) {
     echo "<script>window.location.href='admin_category.php';</script>";
-    exit; // Exit to prevent further execution
+    exit;
 }
 
-// Fetch the category data
 $sql = "SELECT * FROM category WHERE id = $category_id";
 $result = $conn->query($sql);
 if ($result->num_rows == 0) {
     echo "<script>alert('Category not found');</script>";
     echo "<script>window.location.href='admin_category.php';</script>";
-    exit; // Exit if category not found
+    exit;
 }
 $row = $result->fetch_assoc();
 
 if (isset($_POST['confirm'])) {
     try {
-        // Delete the category
         $sql_delete = "DELETE FROM category WHERE id = $category_id";
         if ($conn->query($sql_delete) === TRUE) {
             $_SESSION['category_delete_msg'] = "Category Delete successful!";
@@ -33,7 +30,6 @@ if (isset($_POST['confirm'])) {
             echo "<script>alert('Error deleting category: " . $conn->error . "');</script>";
         }
     } catch (mysqli_sql_exception $e) {
-        // Check if the error message contains information about foreign key constraint
         if (strpos($e->getMessage(), 'foreign key constraint')) {
             echo "<script>alert('Error deleting category: Cannot delete or update a parent row due to a foreign key constraint');</script>";
         } else {

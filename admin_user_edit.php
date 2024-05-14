@@ -20,7 +20,6 @@ if ($result->num_rows == 0) {
 }
 $row = $result->fetch_assoc();
 
-// Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = isset($_POST['name']) ? $_POST['name'] : '';
     $email = isset($_POST['email']) ? $_POST['email'] : '';
@@ -29,30 +28,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = isset($_POST['password']) ? $_POST['password'] : '';
     $profile_img = isset($_POST['profile_img']) ? $_POST['profile_img'] : '';
 
-
-    // Update query
     $sql = "UPDATE user_ac SET name='$name', email='$email', address='$address', phone='$phone', password='$password'";
 
-    // Handle image upload
     if ($_FILES['profile_img']['name']) {
         $image_name = $_FILES['profile_img']['name'];
 
-        // Create "image" folder if it doesn't exist
         if (!file_exists('image')) {
             mkdir('image');
         }
 
-        // Move uploaded image to the "image" folder
         $image_path = 'image/' . $image_name;
         move_uploaded_file($_FILES['profile_img']['tmp_name'], $image_path);
 
-        // Update the SQL query with the image name
         $sql .= ", profile_img='$image_path'";
     }
 
     $sql .= " WHERE id='$id'";
 
-    // Execute the update query
     if ($conn->query($sql) === TRUE) {
         $_SESSION['user_profile_update_msg'] = "profile updated successfully";
         echo "<script>window.location.href='admin_user.php';</script>";
@@ -114,11 +106,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                    class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Password</label>
         </div>
         <div class="relative z-0 w-full mb-5 group">
-            <!-- Hidden input field to store the current img_url -->
             <input type="hidden" name="current_img_url" value="<?= htmlspecialchars($row['profile_img']) ?>">
-            <!-- Display the current img_url as text -->
             <p class="text-xs pb-1"><?= htmlspecialchars($row['profile_img']) ?></p>
-            <!-- File input for uploading new image -->
             <input class="block w-full mb-5 text-sm py-1 text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 appearance-none focus:outline-none bg-transparent dark:border-gray-600 dark:placeholder-gray-400"
                    id="profile_img" type="file" name="profile_img">
         </div>

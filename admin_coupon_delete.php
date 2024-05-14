@@ -10,7 +10,6 @@ if (!$id || !is_numeric($id)) {
     exit;
 }
 
-// Fetch the category data
 $sql = "SELECT * FROM coupon_code WHERE id = $id";
 $result = $conn->query($sql);
 if ($result->num_rows == 0) {

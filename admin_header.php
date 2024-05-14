@@ -47,4 +47,3 @@
 </nav>
 
 <main class="p-4 mx-auto text-gray-300">
-    <!-- Your main content here -->

@@ -12,7 +12,6 @@ if (isset($_SESSION['price'])) {
 } else {
     $amount = $row['price'] * 100;
 }
-//$_SESSION['price'] = $amount;
 $_SESSION['description'] = $row['description'];
 ?>
 

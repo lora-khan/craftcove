@@ -1,8 +1,8 @@
 <?php
+global $conn;
 if (isset($_POST['coupon_btn']) && $_SERVER["REQUEST_METHOD"] == "POST") {
     $coupon_code = $_POST['coupon_code'];
 
-    // Prepared statement for fetching the coupon details
     $coupon_sql = "SELECT cc.id as id, name, discount, applied FROM applied_coupon ac
                 JOIN coupon_code cc ON ac.coupon_id = cc.id
                 WHERE applied = 0 AND user_id = ? AND name=?";

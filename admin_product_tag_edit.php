@@ -4,14 +4,12 @@ require "database.php";
 
 global $conn;
 admin_authentication();
-// Check if category ID is provided and valid
 $id = isset($_GET['id']) ? $_GET['id'] : null;
 if (!$id || !is_numeric($id)) {
     echo "<script>window.location.href='admin_tag_product.php';</script>";
-    exit; // Exit to prevent further execution
+    exit;
 }
 
-// Fetch the tag-product data
 $sql_tag_product = "SELECT tp.id AS id, p.id as product_id, t.name as tag_name, p.name as product_name, t.id as tag_id FROM tag_product tp
 JOIN tag t ON t.id = tp.tag_id
 JOIN product p ON p.id = tp.product_id WHERE tp.id=$id";
@@ -19,29 +17,24 @@ JOIN product p ON p.id = tp.product_id WHERE tp.id=$id";
 $result_tag_product = $conn->query($sql_tag_product);
 if ($result_tag_product->num_rows == 0) {
     echo "<script>window.location.href='admin_tag_product.php';</script>";
-    exit; // Exit if tag-product not found
+    exit;
 }
 
 $row = $result_tag_product->fetch_assoc();
 
-// Fetch the tag data
 $sql_tag = "SELECT * FROM tag";
 $result_tag = $conn->query($sql_tag);
 
-// Fetch the product data
 $sql_product = "SELECT * FROM product";
 $result_product = $conn->query($sql_product);
 
-// Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $tag_id = isset($_POST['tag_id']) ? $_POST['tag_id'] : '';
     $product_id = isset($_POST['product_id']) ? $_POST['product_id'] : '';
     if ($tag_id && $product_id) {
-        // Check if the combination already exists
         $check_sql = "SELECT * FROM tag_product WHERE tag_id='$tag_id' AND product_id='$product_id'";
         $check_result = $conn->query($check_sql);
         if ($check_result->num_rows == 0) {
-            // Update query
             $sql = "UPDATE tag_product SET tag_id='$tag_id', product_id='$product_id' WHERE id=$id";
             if ($conn->query($sql) === TRUE) {
                 $_SESSION['product_tag_update_msg'] = "Tag-Product updated successfully";

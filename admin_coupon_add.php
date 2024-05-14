@@ -14,7 +14,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    // Check if the name already exists in the database
     $check_query = "SELECT COUNT(*) AS count FROM coupon_code WHERE name = ?";
     $stmt = $conn->prepare($check_query);
     $stmt->bind_param("s", $name);

@@ -2,8 +2,6 @@
 require "helpers.php";
 require "database.php";
 global $conn;
-
-// Query to fetch top 6 products
 $sql = "SELECT * FROM product order by total_sold desc LIMIT 6";
 $result = mysqli_query($conn, $sql);
 

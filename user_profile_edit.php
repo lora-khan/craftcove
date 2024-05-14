@@ -5,23 +5,20 @@ $success_msg = "";
 $error_msg = "";
 global $conn;
 
-// Check if product ID is provided and valid
 $id = isset($_GET['id']) ? $_GET['id'] : null;
 if (!$id || !is_numeric($id)) {
     echo "<script>window.location.href='404.php';</script>";
-    exit; // Exit to prevent further execution
+    exit;
 }
 
-// Fetch the product data
 $sql = "SELECT * FROM user_ac WHERE id = '$id'";
 $result = $conn->query($sql);
 if ($result->num_rows == 0) {
     echo "<script>window.location.href='404.php';</script>";
-    exit; // Exit if product not found
+    exit;
 }
 $row = $result->fetch_assoc();
 
-// Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = isset($_POST['name']) ? $_POST['name'] : '';
     $email = isset($_POST['email']) ? $_POST['email'] : '';
@@ -30,29 +27,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = isset($_POST['password']) ? $_POST['password'] : '';
     $profile_img = isset($_POST['profile_img']) ? $_POST['profile_img'] : '';
 
-    // Update query
     $sql = "UPDATE user_ac SET name='$name', email='$email', address='$address', phone='$phone', password='$password'";
 
-    // Handle image upload
     if ($_FILES['profile_img']['name']) {
         $image_name = $_FILES['profile_img']['name'];
 
-        // Create "image" folder if it doesn't exist
         if (!file_exists('image')) {
             mkdir('image');
         }
 
-        // Move uploaded image to the "image" folder
         $image_path = 'image/' . $image_name;
         move_uploaded_file($_FILES['profile_img']['tmp_name'], $image_path);
 
-        // Update the SQL query with the image name
         $sql .= ", profile_img='$image_path'";
     }
 
     $sql .= " WHERE id='$id'";
 
-    // Execute the update query
     if ($conn->query($sql) === TRUE) {
         $success_msg = "Profile updated successfully";
     } else {
@@ -73,10 +64,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="flex justify-center">
         <div class="w-full sm:w-8/12">
             <div class="bg-white shadow-sm p-6 rounded-lg">
-                <h2 class="text-center text-2xl mb-4 font-medium text-orange-500 underline underline-offset-8 uppercase tracking-wide">Edit
+                <h2 class="text-center text-2xl mb-4 font-medium text-orange-500 underline underline-offset-8 uppercase tracking-wide">
+                    Edit
                     Profile</h2>
                 <form action="user_profile_edit.php?id=<?= $id ?>" method="post" enctype="multipart/form-data">
-                    <!-- Your form fields -->
                     <div class="mb-4">
                         <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Name</label>
                         <input type="text" name="name" id="name"
@@ -118,12 +109,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="mb-4">
                         <label for="profile_img" class="block text-sm font-medium text-gray-700 mb-2">Profile
                             Picture</label>
-                        <!-- Hidden input field to store the current img_url -->
                         <input type="hidden" name="current_img_url"
                                value="<?= htmlspecialchars($row['profile_img']) ?>">
-                        <!-- Display the current img_url as text -->
                         <p class="mb-2 text-sm text-cyan-500"><?= htmlspecialchars($row['profile_img']) ?></p>
-                        <!-- File input for uploading new image -->
                         <input type="file" name="profile_img" id="profile_img"
                                class="w-full focus:outline-none border border-orange-200 p-1 rounded-md focus:border-orange-400"
                                accept="image/*">
@@ -162,7 +150,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (closeAlertBtn && alert) {
         closeAlertBtn.addEventListener('click', () => {
             alert.style.display = 'none';
-            window.location.href = "profile.php"; // Redirect only if success message is displayed
+            window.location.href = "profile.php";
         });
     }
 </script>

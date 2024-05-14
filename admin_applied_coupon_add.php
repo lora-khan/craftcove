@@ -4,24 +4,19 @@ require "database.php";
 
 global $conn;
 admin_authentication();
-// Fetch the tag data
 $sql_coupon = "SELECT * FROM coupon_code";
 $result_coupon = $conn->query($sql_coupon);
 
-// Fetch the product data
 $sql_user = "SELECT * FROM user_ac";
 $result_user = $conn->query($sql_user);
 
-// Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_id = isset($_POST['user_id']) ? $_POST['user_id'] : '';
     $coupon_id = isset($_POST['coupon_id']) ? $_POST['coupon_id'] : '';
     if ($user_id && $coupon_id) {
-        // Check if the combination already exists
         $check_sql = "SELECT * FROM applied_coupon WHERE user_id='$user_id' AND coupon_id='$coupon_id'";
         $check_result = $conn->query($check_sql);
         if ($check_result->num_rows == 0) {
-            // Insert query
             $sql = "INSERT INTO applied_coupon (user_id, coupon_id) VALUES ('$user_id', '$coupon_id')";
             if ($conn->query($sql) === TRUE) {
                 $_SESSION['applicable_coupon_msg'] = "applicable coupon added successfully!";

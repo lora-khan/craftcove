@@ -1,11 +1,7 @@
 <?php
-// Start the session
 require 'helpers.php';
 $conn = mysqli_connect("localhost", "root", "", "craftcove2");
 loadPartial('header');
-//if (isset($_SESSION['price'])) {
-//    inspect($_SESSION['price']);
-//}
 
 if (isset($_SESSION['user'])) {
     $user_id = $_SESSION['user']['id'];
@@ -30,7 +26,7 @@ if (isset($_SESSION['user'])) {
                 echo "<script>window.location.href='cart_view.php';</script>";
                 exit;
             }
-            // Prepared statement for fetching the coupon details
+
             $coupon_sql = "SELECT cc.id as id, name, discount, applied FROM applied_coupon ac
                 JOIN coupon_code cc ON ac.coupon_id = cc.id
                 WHERE applied = 0 AND user_id = ? AND name=?";
@@ -68,11 +64,9 @@ if (isset($_SESSION['user'])) {
 
         <div class="container mx-auto my-8">
             <h2 class="text-2xl font-bold mb-4">Checkout</h2>
-            <!-- Order Summary -->
             <div class="bg-white p-4 rounded-lg shadow-md mb-8">
                 <h3 class="text-lg font-semibold mb-4">Order Summary</h3>
 
-                <!-- Order Item -->
                 <div class="flex justify-between items-center border-b border-gray-300 py-2">
                     <div>
                         <h4 class="text-gray-800 font-semibold"><?= $row['product_name'] ?></h4>
@@ -83,16 +77,14 @@ if (isset($_SESSION['user'])) {
                         <span class="text-sm text-gray-500">(Quantity: <?= $row['quantity'] ?>)</span>
                     </div>
                 </div>
-                <!-- End Order Item -->
 
-                <!-- Total Price -->
                 <div class="flex justify-between items-center pt-4">
                     <h4 class="text-lg font-semibold">Total:</h4>
                     <div class="text-lg font-semibold">$<?= $row['price'] ?></div>
                 </div>
             </div>
             <div class="bg-gray-100  p-6 rounded-lg shadow-lg mb-8 ">
-                <!-- Coupon Code Input -->
+
                 <form method="POST" action="">
 
                     <div class="mb-4 inline">
@@ -101,7 +93,7 @@ if (isset($_SESSION['user'])) {
                                placeholder="Enter your coupon code">
                     </div>
 
-                    <!-- Apply Button -->
+
                     <div class="text-center inline-block w-[12.5%] ml-[12%]">
 
                         <button class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 focus:outline-none focus:ring focus:ring-orange-500 focus:border-orange-500 w-full"
@@ -134,7 +126,7 @@ if (isset($_SESSION['user'])) {
                     </div>
                 <?php endif; ?>
             </div>
-            <!-- Checkout Button -->
+
             <div class="flex justify-end mr-10">
                 <?= loadPartial('payment') ?>
             </div>

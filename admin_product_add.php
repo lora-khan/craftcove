@@ -4,7 +4,6 @@ require "database.php";
 
 global $conn;
 admin_authentication();
-// Fetch categories from the database
 $categoryQuery = "SELECT * FROM category";
 $categoryResult = $conn->query($categoryQuery);
 $categories = [];
@@ -14,7 +13,6 @@ if ($categoryResult->num_rows > 0) {
     }
 }
 
-// Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = isset($_POST['name']) ? $_POST['name'] : '';
     $description = isset($_POST['description']) ? $_POST['description'] : '';
@@ -22,36 +20,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stock = isset($_POST['stock']) ? $_POST['stock'] : '';
     $category_id = isset($_POST['category']) ? $_POST['category'] : '';
 
-    // Handle image upload
     $img_url = null;
     if ($_FILES['img_url']['name']) {
         $image_name = $_FILES['img_url']['name'];
         $image_tmp = $_FILES['img_url']['tmp_name'];
         $image_path = 'image/' . $image_name;
 
-        // Create "image" folder if it doesn't exist
         if (!is_dir('image')) {
             mkdir('image', 0777, true);
         }
 
-        // Move uploaded image to the "image" folder
         if (move_uploaded_file($image_tmp, $image_path)) {
             $img_url = $image_path;
         } else {
             $_SESSION['product_img_upload_error'] = "Error uploading image";
-            exit; // Exit if there's an error uploading image
+            exit;
         }
     }
 
-    // Check for negative values
     if ($price < 0 || $stock < 0) {
         $_SESSION['product_insert_negative_error'] = "Negative values are not allowed for price or stock";
     } else {
-        // Insert query
         if (!isset($_SESSION['product_insert_negative_error'])) {
             $sql = "INSERT INTO product (name, description, price, stock, img_url, category_id) VALUES ('$name', '$description', '$price', '$stock', '$img_url', '$category_id')";
 
-            // Execute the insert query
             if ($conn->query($sql) === TRUE) {
                 $_SESSION['product_add_msg'] = "Product inserted successfully";
                 echo "<script>window.location.href='admin_product.php';</script>";

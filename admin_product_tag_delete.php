@@ -4,26 +4,23 @@ require "database.php";
 
 global $conn;
 admin_authentication();
-// Check if tag-product ID is provided and valid
 $id = isset($_GET['id']) ? $_GET['id'] : null;
 if (!$id || !is_numeric($id)) {
     echo "<script>window.location.href='admin_tag_product.php';</script>";
-    exit; // Exit to prevent further execution
+    exit;
 }
 
-// Fetch the tag-product data
 $sql = "SELECT t.name as tag_name, p.name as product_name FROM tag_product tp JOIN tag t ON t.id=tp.tag_id JOIN product p ON p.id=tp.product_id WHERE tp.id = '$id'";
 $result = $conn->query($sql);
 if ($result->num_rows == 0) {
     echo "<script>alert('Tag-Product not found');</script>";
     echo "<script>window.location.href='admin_tag_product.php';</script>";
-    exit; // Exit if tag-product not found
+    exit;
 }
 $row = $result->fetch_assoc();
 
 if (isset($_POST['confirm'])) {
     try {
-        // Delete the tag-product
         $sql_delete = "DELETE FROM tag_product WHERE id = $id";
         if ($conn->query($sql_delete) === TRUE) {
             $_SESSION['product_tag_delete_msg'] = "Delete product tag successful!";
@@ -33,7 +30,6 @@ if (isset($_POST['confirm'])) {
             echo "<script>alert('Error deleting tag-product: " . $conn->error . "');</script>";
         }
     } catch (mysqli_sql_exception $e) {
-        // Check if the error message contains information about foreign key constraint
         if (strpos($e->getMessage(), 'foreign key constraint')) {
             echo "<script>alert('Error deleting Tag-Product: Cannot delete or update a parent row due to a foreign key constraint');</script>";
         } else {

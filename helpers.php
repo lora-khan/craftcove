@@ -1,23 +1,11 @@
 <?php
-/*
- * Get the base path
- *
- * @param string $path
- * @return string
- */
 
 function basePath($path = '')
 {
     return __DIR__ . '/' . $path;
 }
 
-/*
- * Load a view
- *
- * @param string $name
- * @return void
- *
- */
+
 
 function loadView($name)
 {
@@ -29,13 +17,6 @@ function loadView($name)
     }
 }
 
-/*
- * Load a partial
- *
- * @param string $name
- * @return void
- *
- */
 
 function loadPartial($name)
 {
@@ -47,12 +28,7 @@ function loadPartial($name)
     }
 }
 
-/*
- * Inspect a value(s)*
- *
- * @param mixed $value
- * @return void
- */
+
 function inspect($value)
 {
     echo "<pre>";
@@ -60,12 +36,7 @@ function inspect($value)
     echo "</pre>";
 }
 
-/*
- * Inspect a value(s) and Die*
- *
- * @param mixed $value
- * @return void
- */
+
 function inspectAndDie($value)
 {
     echo "<pre>";
@@ -76,13 +47,12 @@ function inspectAndDie($value)
 
 function getTimeElapsedString($datetime, $full = false)
 {
-    // Set the default timezone to Bangladeshi time
     date_default_timezone_set('Asia/Dhaka');
 
     $now = new DateTime;
-    $now->setTimezone(new DateTimeZone('Asia/Dhaka')); // Set the timezone to Bangladeshi time
+    $now->setTimezone(new DateTimeZone('Asia/Dhaka'));
     $ago = new DateTime($datetime);
-    $ago->setTimezone(new DateTimeZone('Asia/Dhaka')); // Set the timezone to Bangladeshi time
+    $ago->setTimezone(new DateTimeZone('Asia/Dhaka'));
     $diff = $now->diff($ago);
 
     $diff->w = floor($diff->d / 7);

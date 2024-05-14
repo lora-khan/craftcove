@@ -25,7 +25,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['negative_or_0'] = "Discount must be greater than 0";
     }
     if ($name && $discount > 0) {
-        // Update query
         $sql = "UPDATE coupon_code SET name='$name',discount='$discount' WHERE id=$id";
         if ($conn->query($sql) === TRUE) {
             $_SESSION['coupon_update_msg'] = "Coupon updated successfully!";

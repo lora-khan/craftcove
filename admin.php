@@ -24,7 +24,6 @@ $row_orders = $result_orders->fetch_assoc();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="resources/favicon.ico" type="image/x-icon">
     <title>Craftcove Admin Panel</title>
-    <!--    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">-->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
           integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
@@ -86,11 +85,9 @@ $row_orders = $result_orders->fetch_assoc();
     </div>
     <!-- Content -->
     <div class="flex-1 p-8 min-h-screen bg-gray-100">
-        <!-- Welcome Message -->
         <h1 class="text-3xl font-semibold mb-8 text-center uppercase text-slate-700">Welcome to Craftcove Admin
             Panel</h1>
         <div class="pt-1 bg-slate-400"></div>
-        <!-- Statistics -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center h-96">
             <div class="bg-white p-10 rounded-tl-full rounded-bl-full shadow-md card flex justify-center items-center flex-col">
                 <h2 class="text-lg tracking-wide font-semibold mb-4 text-center uppercase">Total Users</h2>

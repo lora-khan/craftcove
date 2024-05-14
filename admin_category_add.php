@@ -4,12 +4,8 @@ require "database.php";
 
 global $conn;
 admin_authentication();
-// Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Retrieve and sanitize the input
     $name = isset($_POST['name']) ? htmlspecialchars($_POST['name']) : '';
-
-    // Validate input (you can add more validation as needed)
     if (empty($name)) {
         echo "<script>alert('Please enter a name for the category');</script>";
         echo "<script>window.location.href='admin_category.php';</script>";
@@ -28,7 +24,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    // Insert the new category into the database
     $sql = "INSERT INTO category (name) VALUES ('$name')";
     if ($conn->query($sql) === TRUE) {
         $_SESSION['category_add_msg'] = "Category added successfully";

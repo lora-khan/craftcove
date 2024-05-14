@@ -9,19 +9,13 @@ $stmt = $conn->prepare($sql);
 $stmt->execute();
 
 try {
-    // Disable SSL certificate verification for local development
     \Stripe\Stripe::setVerifySslCerts(false);
 
-    // Retrieve token from POST data
     $token = $_POST['stripeToken'];
 
-    // Ensure required session variables are set
     if (!isset($_SESSION['price']) || !isset($_SESSION['description'])) {
         throw new Exception('Session variables not set.');
     }
-
-    // Convert amount to cents (multiply by 100)
-//    $amount_cents = $_SESSION['price'] * 100;
 
     \Stripe\Charge::create(array(
         "amount" => $_SESSION['price']*100,
@@ -30,18 +24,13 @@ try {
         "source" => $token,
     ));
 
-    // Unset session variables after successful charge
     unset($_SESSION['price']);
-//    unset($_SESSION['product_name']);
     unset($_SESSION['description']);
-//    unset($_SESSION['quantity']);
 
 
 } catch (\Stripe\Exception\ApiErrorException $e) {
-    // Handle Stripe API errors
     echo 'Stripe API Error: ' . $e->getMessage();
 } catch (Exception $e) {
-    // Handle other exceptions
     echo 'Error: ' . $e->getMessage();
 }
 ?>
