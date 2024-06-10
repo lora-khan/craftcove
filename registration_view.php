@@ -10,7 +10,7 @@ $duplicateEmail = "";
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['registerBtn'])) {
     // Retrieve form data
     $name = $_POST['name'];
-    $email = $_POST['email'];
+    $email = strtolower($_POST['email']);
     $address = $_POST['address'];
     $phone = $_POST['phone'];
     $password = $_POST['password'];
