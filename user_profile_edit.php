@@ -21,7 +21,7 @@ $row = $result->fetch_assoc();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = isset($_POST['name']) ? $_POST['name'] : '';
-    $email = isset($_POST['email']) ? $_POST['email'] : '';
+    $email = isset($_POST['email']) ? strtolower($_POST['email']) : '';
     $address = isset($_POST['address']) ? $_POST['address'] : '';
     $phone = isset($_POST['phone']) ? $_POST['phone'] : '';
     $password = isset($_POST['password']) ? $_POST['password'] : '';
